@@ -1,0 +1,20 @@
+body {
+  background-color: whitesmoke;
+}
+
+.App-logo {
+  height: 15vmin;
+  pointer-events: none;
+}
+
+.active {
+  color: #0b5ed7 !important;
+  font-weight: bold;
+  border-bottom: 3px solid #0b5ed7;
+}
+
+@media screen and (max-width: 767px) {
+  .App-logo {
+    height: 25vmin;
+  }
+}
