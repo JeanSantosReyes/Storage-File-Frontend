@@ -3,7 +3,7 @@ import { useServiceManageStorage } from '../hooks'
 
 const StoragePage: React.FC = () => {
 
-    const { retrieveFiles, setRecords, files, records } = useServiceManageStorage();
+    const { retrieveFiles, setRecords, files, records, loading } = useServiceManageStorage();
 
     return (
         <>
@@ -11,7 +11,7 @@ const StoragePage: React.FC = () => {
             <div className='container'>
                 <div className='row'>
                     <Search files={files} setRecords={setRecords} />
-                    <Table files={records} refreshList={retrieveFiles} />
+                    <Table files={records} refreshList={retrieveFiles} loading={loading} />
                 </div>
             </div>
         </>

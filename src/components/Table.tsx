@@ -1,22 +1,25 @@
-import Swal from 'sweetalert2';
+import DataTable, { TableColumn } from 'react-data-table-component';
 import fileDownload from 'js-file-download';
+import Swal from 'sweetalert2';
 import { IFile } from '../interfaces';
 import { deleteFile, downloadFile } from '../services';
+import Loading from './Loading';
 
 interface Props {
     files: Array<IFile>;
     refreshList: () => void;
+    loading: boolean;
 }
 
-const Table: React.FC<Props> = ({ files, refreshList }) => {
+const Table: React.FC<Props> = ({ files, refreshList, loading }) => {
 
-    const DownloadFile = ({ name }: IFile) => {
-        downloadFile(name)
-            .then((res) => fileDownload(res.data, name))
+    const DownloadFile = (filename: string) => {
+        downloadFile(filename)
+            .then((res) => fileDownload(res.data, filename))
             .catch((err) => console.log(err))
     }
 
-    const DeleteFile = ({ name }: IFile) => {
+    const DeleteFile = (filename: string) => {
         Swal.fire({
             title: '¿Estás seguro?',
             text: `No podrás revertir esto!`,
@@ -28,7 +31,7 @@ const Table: React.FC<Props> = ({ files, refreshList }) => {
             confirmButtonText: 'Si, eliminarlo!'
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteFile(name)
+                deleteFile(filename)
                     .catch(error => console.log(error))
                     .finally(() => refreshList())
                 Swal.fire('Eliminado!', 'Su archivo ha sido eliminado.', 'success');
@@ -36,35 +39,56 @@ const Table: React.FC<Props> = ({ files, refreshList }) => {
         })
     }
 
+    const columns: TableColumn<IFile>[] = [
+        {
+            width: '70px',
+            center: true,
+            cell: () => (
+                <div className='d-flex justify-content-center'>
+                    <i className='bi bi-file-pdf-fill fs-2'></i>
+                </div>
+            )
+        },
+        {
+            name: 'File',
+            selector: (row) => row.name,
+            sortable: true
+        },
+        {
+            name: 'Actions',
+            width: '200px',
+            center: true,
+            cell: ({ name }) => (
+                <div className='d-flex justify-content-center gap-2'>
+                    <button className='btn btn-primary' onClick={() => DownloadFile(name)}>
+                        <i className='bi bi-cloud-arrow-down-fill'></i>
+                    </button>
+                    <button className='btn btn-danger' onClick={() => DeleteFile(name)}>
+                        <i className='bi bi-trash-fill'></i>
+                    </button>
+                </div>
+            )
+        }
+    ]
+
+    const paginationComponentOptions = {
+        rowsPerPageText: 'Filas por página',
+        rangeSeparatorText: 'de',
+        selectAllRowsItem: true,
+        selectAllRowsItemText: 'Todos',
+    };
+
     return (
-        <table className='table table-hover align-middle'>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    files.map((file, index) => (
-                        <tr key={index}>
-                            <td><i className='bi bi-file-pdf-fill fs-2'></i></td>
-                            <td>{file.name}</td>
-                            <td>
-                                <button className='btn btn-primary' onClick={() => DownloadFile(file)}>
-                                    <i className='bi bi-cloud-arrow-down-fill'></i>
-                                </button>
-                                {' '}
-                                <button className='btn btn-danger' onClick={() => DeleteFile(file)}>
-                                    <i className='bi bi-trash-fill'></i>
-                                </button>
-                            </td>
-                        </tr>
-                    ))
-                }
-            </tbody>
-        </table>
+        <DataTable
+            className='my-4'
+            columns={columns}
+            data={files}
+            highlightOnHover
+            progressPending={loading}
+            progressComponent={<Loading />}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+        />
     )
 }
 
