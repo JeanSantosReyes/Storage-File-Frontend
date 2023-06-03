@@ -6,9 +6,10 @@ Instalaciones:
 - Sweet Alert
 - Axios
 - React Dropzone
+- JS File Download
 
 ```
-npm install react-router-dom bootstrap sweetalert2 axios react-dropzone
+npm install react-router-dom bootstrap sweetalert2 axios react-dropzone js-file-download
 ```
 
 # Screenshots

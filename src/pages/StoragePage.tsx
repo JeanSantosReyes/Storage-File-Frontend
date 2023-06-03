@@ -13,7 +13,6 @@ const StoragePage: React.FC = () => {
                     <Search files={files} setRecords={setRecords} />
                     <Table files={records} refreshList={retrieveFiles} />
                 </div>
-
             </div>
         </>
     )

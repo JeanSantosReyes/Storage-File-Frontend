@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
+import fileDownload from 'js-file-download';
 import { IFile } from '../interfaces';
-import { deleteFile } from '../services';
+import { deleteFile, downloadFile } from '../services';
 
 interface Props {
     files: Array<IFile>;
@@ -9,12 +10,10 @@ interface Props {
 
 const Table: React.FC<Props> = ({ files, refreshList }) => {
 
-    const DownloadFile = ({ name, url }: IFile) => {
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', name);
-        document.body.appendChild(link);
-        link.click();
+    const DownloadFile = ({ name }: IFile) => {
+        downloadFile(name)
+            .then((res) => fileDownload(res.data, name))
+            .catch((err) => console.log(err))
     }
 
     const DeleteFile = ({ name }: IFile) => {
