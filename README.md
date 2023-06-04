@@ -7,9 +7,10 @@ Instalaciones:
 - Axios
 - React Dropzone
 - JS File Download
+- React Table v8
 
 ```
-npm install react-router-dom bootstrap sweetalert2 axios react-dropzone js-file-download
+npm install react-router-dom bootstrap sweetalert2 axios react-dropzone js-file-download @tanstack/react-table
 ```
 
 # Screenshots
